@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define MINEMU_BOOT_INFO_MAGIC UINT32_C(0x4d424f4f)
+#define MINEMU_ABI_VERSION UINT16_C(1)
 #define MINEMU_BOOT_INFO_VADDR UINT32_C(0xc0007000)
 
 struct minemu_boot_info {

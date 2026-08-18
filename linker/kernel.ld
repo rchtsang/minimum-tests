@@ -1,5 +1,5 @@
 OUTPUT_ARCH(arm)
-ENTRY(minemu_bootstrap)
+ENTRY(minemu_bootstrap_high)
 
 PHDRS
 {

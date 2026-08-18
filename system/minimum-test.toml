@@ -1,0 +1,9 @@
+image = "build/minimum.img"
+boot_rom = "../bootrom/minemu-bootrom.bin"
+max_ticks = 500000
+
+[assert]
+ticks_at_least = 500000
+lifecycle = "stopped"
+mmu_enabled = true
+trace_values = [1]
