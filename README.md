@@ -20,27 +20,31 @@ owns them. The repository root never contains build output.
 
 ### Bootloader
 
-`bootloader/src/` contains the reset assembly and C image loader.
-`bootloader/linker/bootloader.ld` fixes the firmware at physical address zero.
-`bootloader/bootloader.bin` is the checked-in reproducible ROM used by minemu.
+- `bootloader/src/` contains the reset assembly and C image loader.
+- `bootloader/linker/bootloader.ld` fixes the firmware at physical address zero.
+- `bootloader/bootloader.bin` is the bootloader executable that is loaded into
+  minemu's bootable ROM.
 
 ### Kernel
 
-`kernel/include/minemu/` contains the platform and kernel interfaces available
-to kernel code. `kernel/src/` separates core starter code, runtime support, and
-startup assembly. Complete privileged examples live under `kernel/examples/`.
+- `kernel/include/minemu/` contains the platform and kernel interfaces available
+  to kernel code.
+- `kernel/src/` separates core starter code, runtime support, and
+  startup assembly.
+- `kernel/examples/` contains kernel-mode code examples.
 
 ### User
 
-`user/common/` contains the user linker script and shared Make rules.
-`user/lib/` builds the statically linked user support library. Each directory
-under `user/prog/` is an independently buildable user program.
+- `user/common/` contains the user linker script and shared Make rules.
+- `user/lib/` builds user support libraries.
+- `user/prog/` contains directories for independently buildable user programs.
 
 ### Image
 
-`image/minimum.toml` selects the kernel and user modules packed into the system
-ROM image. `image/minimum-test.toml` defines the corresponding headless boot
-test. Generated images live under `image/build/`.
+- `image/minimum.toml` selects the kernel and user modules packed into the system
+  ROM image.
+- `image/minimum-test.toml` defines the corresponding headless boot test.
+- `image/build/` contains generated image files.
 
 ## Building
 
