@@ -1,5 +1,5 @@
 image = "build/minimum.img"
-boot_rom = "../bootrom/minemu-bootrom.bin"
+boot_rom = "../bootloader/bootloader.bin"
 max_ticks = 500000
 
 [assert]

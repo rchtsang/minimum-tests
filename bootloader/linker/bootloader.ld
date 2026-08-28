@@ -35,7 +35,7 @@ SECTIONS
   .bss : { *(.bss*) *(COMMON) } > BOOTROM
 
   . = ALIGN(4);
-  __bootrom_end = .;
+  __bootloader_end = .;
 
   /DISCARD/ :
   {
@@ -45,6 +45,6 @@ SECTIONS
   }
 }
 
-ASSERT(__bootrom_end <= ORIGIN(BOOTROM) + LENGTH(BOOTROM), "boot ROM overflow")
+ASSERT(__bootloader_end <= ORIGIN(BOOTROM) + LENGTH(BOOTROM), "bootloader overflow")
 ASSERT(SIZEOF(.data) == 0, "boot ROM must not contain writable data")
 ASSERT(SIZEOF(.bss) == 0, "boot ROM must not contain BSS")

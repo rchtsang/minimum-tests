@@ -1,5 +1,8 @@
 **/.DS_Store
+**/build/
 **/*.o
+**/*.d
+**/*.a
 **/*.elf
-bootrom/build/
-system/build/
+**/*.map
+**/*.img

@@ -5,35 +5,36 @@ READELF := $(ARM_PREFIX)readelf
 NM := $(ARM_PREFIX)nm
 
 BUILD := build
-ELF := $(BUILD)/minemu-bootrom.elf
-GENERATED := $(BUILD)/minemu-bootrom.bin
-CANONICAL := minemu-bootrom.bin
+ELF := $(BUILD)/bootloader.elf
+GENERATED := $(BUILD)/bootloader.bin
+CANONICAL := bootloader.bin
 OBJECTS := $(BUILD)/start.o $(BUILD)/boot.o
+DEPENDENCIES := $(OBJECTS:.o=.d)
 
 ARCH_FLAGS := -mcpu=cortex-a9 -marm -mfloat-abi=soft
 CFLAGS := $(ARCH_FLAGS) -Os -std=c11 -ffreestanding -fno-builtin -fno-stack-protector \
 	-fno-pic -fno-pie -fno-unwind-tables -fno-asynchronous-unwind-tables \
 	-fno-tree-loop-distribute-patterns -fdata-sections -ffunction-sections \
-	-mno-unaligned-access -Wall -Wextra -Werror -Wstack-usage=512
-ASFLAGS := $(ARCH_FLAGS) -ffreestanding
+	-mno-unaligned-access -Wall -Wextra -Werror -Wstack-usage=512 -MMD -MP
+ASFLAGS := $(ARCH_FLAGS) -ffreestanding -MMD -MP
 LDFLAGS := $(ARCH_FLAGS) -nostdlib -nostartfiles -nodefaultlibs -static -no-pie \
-	-Wl,-T,bootrom.ld -Wl,--gc-sections -Wl,--build-id=none \
+	-Wl,-T,linker/bootloader.ld -Wl,--gc-sections -Wl,--build-id=none \
 	-Wl,--orphan-handling=error -Wl,--fatal-warnings -Wl,--no-undefined \
-	-Wl,--require-defined=_start -Wl,-Map,$(BUILD)/minemu-bootrom.map
+	-Wl,--require-defined=_start -Wl,-Map,$(BUILD)/bootloader.map
 
 .PHONY: all check update clean
 
 all: $(GENERATED)
 
-$(BUILD)/start.o: start.S
+$(BUILD)/start.o: src/start.S
 	@mkdir -p $(dir $@)
 	$(CC) $(ASFLAGS) -c $< -o $@
 
-$(BUILD)/boot.o: boot.c
+$(BUILD)/boot.o: src/boot.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(ELF): $(OBJECTS) bootrom.ld
+$(ELF): $(OBJECTS) linker/bootloader.ld
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
 $(GENERATED): $(ELF)
@@ -51,3 +52,5 @@ update: $(GENERATED)
 
 clean:
 	rm -rf $(BUILD)
+
+-include $(DEPENDENCIES)

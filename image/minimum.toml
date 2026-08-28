@@ -1,0 +1,5 @@
+kernel = "../kernel/build/minimum-kernel.elf"
+
+[[modules]]
+name = "minimum-user"
+elf = "../user/prog/minimum-user/build/minimum-user.elf"

@@ -1,20 +1,17 @@
-ARM_PREFIX ?= arm-none-eabi-
-CC := $(ARM_PREFIX)gcc
-PLATFORM_DIR ?= ..
-BUILD_DIR ?= build
-CPPFLAGS := -I$(PLATFORM_DIR)/include
-CFLAGS := -mcpu=cortex-a9 -marm -mfloat-abi=soft -ffreestanding -fno-builtin \
-  -fdata-sections -ffunction-sections -fno-stack-protector -std=c11 -Wall -Wextra -Werror
-LDFLAGS := -nostdlib -Wl,-T,$(PLATFORM_DIR)/linker/user.ld -Wl,--gc-sections
-LIBGCC := $(shell $(CC) -mcpu=cortex-a9 -marm -mfloat-abi=soft -print-libgcc-file-name)
+PROGRAMS := minimum-user
 
-.PHONY: all clean
+.PHONY: all lib programs clean $(PROGRAMS)
 
-all: $(BUILD_DIR)/minimum-user.elf
+all: lib programs
 
-$(BUILD_DIR)/minimum-user.elf: main.c
-	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< $(LIBGCC) -o $@
+lib:
+	$(MAKE) -C lib all
+
+programs: $(PROGRAMS)
+
+$(PROGRAMS):
+	$(MAKE) -C prog/$@ all
 
 clean:
-	rm -rf $(BUILD_DIR)
+	$(MAKE) -C lib clean
+	@for program in $(PROGRAMS); do $(MAKE) -C prog/$$program clean; done
