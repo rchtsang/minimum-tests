@@ -1,9 +1,8 @@
-# minimum Template
+# minimum Tests
 
-This repository is the student starting point for the `minimum` teaching
-operating system. It contains a starter A32 kernel, user-mode build support,
-small examples, a supplied Boot ROM, and the manifest used to package a bootable
-system image for `minemu`.
+This repository is the emulator conformance fork of `minimum-template`. It
+tracks the student platform layout while owning headless test programs,
+manifests, and assertions that do not belong in the student starter repository.
 
 ## Quickstart
 
