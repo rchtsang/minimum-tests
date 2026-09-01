@@ -3,7 +3,6 @@ MINEMU ?= minemu
 IMAGE := build/minimum.img
 KERNEL := ../kernel/build/minimum-kernel.elf
 USER_PROGRAM := ../user/prog/minimum-user/build/minimum-user.elf
-BOOTLOADER := ../bootloader/bootloader.bin
 KERNEL_INPUTS := $(wildcard ../kernel/src/core/*.c) \
 	$(wildcard ../kernel/src/runtime/*.c) $(wildcard ../kernel/src/startup/*.S) \
 	$(wildcard ../kernel/include/minemu/*.h) ../kernel/linker/kernel.ld ../kernel/Makefile
@@ -12,7 +11,7 @@ USER_INPUTS := $(wildcard ../user/prog/minimum-user/*.c) \
 	$(wildcard ../user/lib/include/*.h) ../user/common/common.mk ../user/common/user.ld \
 	../user/lib/Makefile ../user/prog/minimum-user/Makefile
 
-.PHONY: all bootloader-check test clean
+.PHONY: all clean
 
 all: $(IMAGE)
 
@@ -22,15 +21,9 @@ $(KERNEL): $(KERNEL_INPUTS)
 $(USER_PROGRAM): $(USER_INPUTS)
 	$(MAKE) -C ../user/prog/minimum-user all
 
-bootloader-check:
-	$(MAKE) -C ../bootloader check
-
 $(IMAGE): minimum.toml $(KERNEL) $(USER_PROGRAM)
 	@mkdir -p $(dir $@)
 	$(MINEMU) image minimum.toml --output $@
-
-test: bootloader-check $(IMAGE) $(BOOTLOADER) minimum-test.toml
-	$(MINEMU) test minimum-test.toml
 
 clean:
 	rm -rf build

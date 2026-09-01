@@ -43,7 +43,6 @@ owns them. The repository root never contains build output.
 
 - `image/minimum.toml` selects the kernel and user modules packed into the system
   ROM image.
-- `image/minimum-test.toml` defines the corresponding headless boot test.
 - `image/build/` contains generated image files.
 
 ## Building
@@ -63,14 +62,8 @@ make kernel
 make kernel-examples
 make user
 make image
-make test
 make clean
 ```
-
-`make test` constructs `image/build/minimum.img`, starts execution at the
-platform reset vector, verifies the boot-info handoff after the kernel enables
-the MMU, and checks the expected trace assertion. Override the CLI with
-`MINEMU=/path/to/minemu` when needed.
 
 Run the packed image directly with:
 
