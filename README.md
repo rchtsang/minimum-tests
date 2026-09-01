@@ -26,8 +26,30 @@ to find component specifications and user guides.
 
 ### Build And Package
 
-From the repository root, build the kernel, user program, examples, and supplied
-Boot ROM check:
+### Kernel
+
+- `kernel/include/minemu/` contains the platform and kernel interfaces available
+  to kernel code.
+- `kernel/src/` separates core starter code, runtime support, and
+  startup assembly.
+- `kernel/examples/` contains kernel-mode code examples.
+
+### User
+
+- `user/common/` contains the user linker script and shared Make rules.
+- `user/lib/` builds user support libraries.
+- `user/prog/` contains directories for independently buildable user programs.
+
+### Image
+
+- `image/minimum.toml` selects the kernel and user modules packed into the system
+  ROM image.
+- `image/minimum-test.toml` defines the corresponding headless boot test.
+- `image/build/` contains generated image files.
+
+## Building
+
+Build the bootloader, starter kernel, user program, and all kernel examples:
 
 ```sh
 make
@@ -132,11 +154,27 @@ make kernel
 make kernel-examples
 make user
 make image
-just test-all hw1
+just test-all hw1 # hw tests
+make test # platform tests
 make clean
 ```
 
-Individual examples and programs can also be built directly:
+`make test` constructs `image/build/minimum.img`, starts execution at the
+platform reset vector, verifies the boot-info handoff after the kernel enables
+the MMU, and checks the expected trace assertion. Override the CLI with
+`MINEMU=/path/to/minemu` when needed.
+
+Run the packed image directly with:
+
+```sh
+minemu run image/build/minimum.img \
+  --boot-rom bootloader/bootloader.bin
+```
+
+## Independent Builds
+
+Kernel examples and user programs do not depend on root-provided path
+variables. They can be compiled directly:
 
 ```sh
 make -C kernel/examples/mmio-basics

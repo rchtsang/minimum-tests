@@ -1,6 +1,6 @@
 MINEMU ?= minemu
 
-.PHONY: all bootloader bootloader-check kernel kernel-examples user image clean
+.PHONY: all bootloader bootloader-check kernel kernel-examples user image test clean
 
 all: bootloader-check kernel user kernel-examples
 
@@ -21,6 +21,9 @@ user:
 
 image: kernel user
 	$(MAKE) -C image MINEMU="$(MINEMU)" all
+
+test:
+	$(MAKE) -C image MINEMU="$(MINEMU)" test
 
 clean:
 	$(MAKE) -C bootloader clean
