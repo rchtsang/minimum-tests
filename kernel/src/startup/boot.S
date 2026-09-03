@@ -85,7 +85,7 @@ minemu_bootstrap_map:
     subs r2, r2, #1
     bne 5b
     ldr r0, =0x40022000
-    ldr r1, =0x1000000b
+    ldr r1, =0x10000013
     mov r2, #16
 6:
     str r1, [r0], #4
