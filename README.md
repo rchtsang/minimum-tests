@@ -4,12 +4,23 @@ This repository is the emulator conformance fork of `minimum-template`. It
 tracks the student platform layout while owning headless test programs,
 manifests, and assertions that do not belong in the student starter repository.
 
-## Quickstart
+The baseline `image/minimum-test.toml` verifies reset firmware, segment copy,
+BSS clearing, boot information, and the higher-half handoff. Focused tests under
+`headless/` cover UART, timers and interrupts, block media, RNG and trace, MMU
+permissions and replacement bits, exception and CP15 behavior, and TTBR/TLBIALL
+switching.
 
-### Prerequisites
+## Repository Structure
 
-To work without the published development container, install these tools
-locally:
+The five top-level source directories have distinct ownership:
+
+```text
+bootloader/  Reset firmware and the canonical 64 KiB Boot ROM binary
+kernel/      Kernel headers, linker script, startup, runtime, and examples
+user/        User libraries, common build support, and independent programs
+image/       Packed-image manifests, generated images, and boot tests
+headless/    Focused emulator conformance programs and test manifests
+```
 
 - GNU Make and standard Unix build tools.
 - `just` for the parameterized public-test workflow.
@@ -156,6 +167,7 @@ make user
 make image
 just test-all hw1 # hw tests
 make test # platform tests
+make headless
 make clean
 ```
 

@@ -28,8 +28,12 @@ LIBGCC := $(shell $(CC) $(ARCH_FLAGS) -print-libgcc-file-name)
 
 all: $(ELF)
 
+ifeq ($(KERNEL_RUNTIME_READY),1)
+$(KERNEL_RUNTIME):
+else
 $(KERNEL_RUNTIME): $(KERNEL_RUNTIME_INPUTS)
 	$(MAKE) -C $(KERNEL_DIR) runtime
+endif
 
 $(ELF): $(OBJECTS) $(KERNEL_RUNTIME) $(KERNEL_DIR)/linker/kernel.ld
 	@mkdir -p $(dir $@)

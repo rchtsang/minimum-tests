@@ -1,0 +1,14 @@
+image = "build/block.img"
+boot_rom = "../../bootloader/bootloader.bin"
+block_media = "build/disk.img"
+instruction_batch = 1
+max_ticks = 500000
+
+[assert]
+lifecycle = "stopped"
+mmu_enabled = true
+trace_values = [0x20030001]
+
+[[assert.block_media]]
+offset = 512
+bytes = [165, 165, 165, 165, 165, 165, 165, 165, 165, 165, 165, 165, 165, 165, 165, 165]
