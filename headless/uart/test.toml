@@ -15,6 +15,7 @@ data = "B"
 [assert]
 uart0_contains = "A"
 uart1_contains = "B"
-lifecycle = "stopped"
+execution_lifecycle = "paused"
+shutdown_lifecycle = "stopped"
 mmu_enabled = true
 trace_values = [0x20010001]

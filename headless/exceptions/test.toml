@@ -3,7 +3,8 @@ boot_rom = "../../bootloader/bootloader.bin"
 max_ticks = 600000
 
 [assert]
-lifecycle = "stopped"
+execution_lifecycle = "paused"
+shutdown_lifecycle = "stopped"
 mmu_enabled = true
 fault_status = 0x00000303
 trace_values = [0x20070001]

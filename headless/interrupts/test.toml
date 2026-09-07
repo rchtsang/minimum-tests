@@ -34,6 +34,7 @@ uart = 1
 data = "F"
 
 [assert]
-lifecycle = "stopped"
+execution_lifecycle = "paused"
+shutdown_lifecycle = "stopped"
 mmu_enabled = true
 trace_values = [0x20050001]

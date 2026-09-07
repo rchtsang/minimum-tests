@@ -9,6 +9,7 @@ value = 165
 
 [assert]
 ticks_at_least = 500000
-lifecycle = "stopped"
+execution_lifecycle = "paused"
+shutdown_lifecycle = "stopped"
 mmu_enabled = true
 trace_values = [0x20000001]
