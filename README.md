@@ -18,9 +18,10 @@ Until the development container is released, install these tools locally:
 - The `minemu` executable on `PATH`.
 
 The emulator and platform documentation are maintained in the
-[minemu repository](https://github.com/rchtsang/minemu). Use its
-[documentation index](https://github.com/rchtsang/minemu/blob/main/docs/README.md)
-to find the current normative platform contract and user guides.
+[minemu repository](https://github.com/rchtsang/minemu). Start with the
+[normative platform ABI v1](https://github.com/rchtsang/minemu/blob/main/docs/platform/abi-v1.md)
+or use the [documentation index](https://github.com/rchtsang/minemu/blob/main/docs/README.md)
+to find component specifications and user guides.
 
 ### Build And Package
 
