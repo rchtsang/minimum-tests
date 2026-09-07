@@ -1,63 +1,99 @@
 # minimum Template
 
-This repository is the starting point for the `minimum` teaching operating
-system. It contains the platform bootloader, a starter kernel, user-mode build
-support, reference programs, and reproducible image definitions.
+This repository is the student starting point for the `minimum` teaching
+operating system. It contains a starter A32 kernel, user-mode build support,
+small examples, a supplied Boot ROM, and the manifest used to package a bootable
+system image for `minemu`.
 
-## Repository Structure
+## Quickstart
 
-The four top-level source directories have distinct ownership:
+### Prerequisites
 
-```text
-bootloader/  Reset firmware and the canonical 64 KiB Boot ROM binary
-kernel/      Kernel headers, linker script, startup, runtime, and examples
-user/        User libraries, common build support, and independent programs
-image/       Packed-image manifests, generated images, and boot tests
-```
+Until the development container is released, install these tools locally:
 
-Generated artifacts remain in a `build/` directory beneath the component that
-owns them. The repository root never contains build output.
+- GNU Make and standard Unix build tools.
+- The GNU Arm Embedded toolchain, including `arm-none-eabi-gcc`,
+  `arm-none-eabi-ar`, `arm-none-eabi-objcopy`, `arm-none-eabi-readelf`, and
+  `arm-none-eabi-nm`.
+- The `minemu` executable on `PATH`.
 
-### Bootloader
+The emulator and platform documentation are maintained in the
+[minemu repository](https://github.com/rchtsang/minemu). Use its
+[documentation index](https://github.com/rchtsang/minemu/blob/main/docs/README.md)
+to find the current normative platform contract and user guides.
 
-- `bootloader/src/` contains the reset assembly and C image loader.
-- `bootloader/linker/bootloader.ld` fixes the firmware at physical address zero.
-- `bootloader/bootloader.bin` is the bootloader executable that is loaded into
-  minemu's bootable ROM.
+### Build And Package
 
-### Kernel
-
-- `kernel/include/minemu/` contains the platform and kernel interfaces available
-  to kernel code.
-- `kernel/src/` separates core starter code, runtime support, and
-  startup assembly.
-- `kernel/examples/` contains kernel-mode code examples.
-
-### User
-
-- `user/common/` contains the user linker script and shared Make rules.
-- `user/lib/` builds user support libraries.
-- `user/prog/` contains directories for independently buildable user programs.
-
-### Image
-
-- `image/minimum.toml` selects the kernel and user modules packed into the system
-  ROM image.
-- `image/build/` contains generated image files.
-
-## Building
-
-Build the bootloader, starter kernel, user program, and all kernel examples:
+From the repository root, build the kernel, user program, examples, and supplied
+Boot ROM check:
 
 ```sh
 make
 ```
 
-Useful component targets are:
+Packaging is a separate step. Build the system-ROM image after the source build:
 
 ```sh
-make bootloader
-make bootloader-check
+make image
+```
+
+This creates `image/build/minimum.img`. If `minemu` is not on `PATH`, provide
+its executable explicitly:
+
+```sh
+make image MINEMU=/path/to/minemu
+```
+
+### Run
+
+Boot the packaged image with the supplied 64-KiB Boot ROM:
+
+```sh
+minemu run image/build/minimum.img \
+  --boot-rom bootloader/bootloader.bin
+```
+
+The TUI opens with emulation paused at the reset vector. These controls are
+enough for the initial workflow:
+
+| Input | Effect |
+|---|---|
+| `Space`, then `s` | Start or pause execution. |
+| `:start` | Start continuous execution. |
+| `:stop` | Pause execution. |
+| `i` | Enter console insert mode and send keys to the selected UART. |
+| `Esc` | Return to normal mode. |
+| `Space`, then `i` | Open inspect view and pause before taking snapshots. |
+| `Tab` | Cycle the focused inspect pane's subview. |
+| `?` | Open the complete in-application help table. |
+| `:q` | Shut down the emulator and quit. |
+
+See the full [TUI guide](https://github.com/rchtsang/minemu/blob/main/docs/dev/tui.md)
+for navigation, memory inspection, searches, commands, and UART selection.
+
+## Where To Work
+
+```text
+bootloader/  Supplied reset firmware and canonical 64-KiB Boot ROM
+kernel/      Starter kernel, platform headers, linker script, and examples
+user/        User support library, common build rules, and starter program
+image/       Image manifest and generated packaged image
+```
+
+- Start kernel work in `kernel/src/core/` and use interfaces from
+  `kernel/include/minemu/`.
+- Add kernel examples under `kernel/examples/`.
+- Add independently linked user programs under `user/prog/` using the existing
+  directory-local Makefile pattern.
+- Select the kernel and user modules included in the image by editing
+  `image/minimum.toml`.
+
+Generated files remain in a `build/` directory beneath the component that owns
+them. The repository root does not contain build output.
+
+## Useful Targets
+
+```sh
 make kernel
 make kernel-examples
 make user
@@ -65,36 +101,28 @@ make image
 make clean
 ```
 
-Run the packed image directly with:
-
-```sh
-minemu run image/build/minimum.img \
-  --boot-rom bootloader/bootloader.bin
-```
-
-## Independent Builds
-
-Kernel examples and user programs do not depend on root-provided path
-variables. They can be compiled directly:
+Individual examples and programs can also be built directly:
 
 ```sh
 make -C kernel/examples/mmio-basics
 make -C kernel/examples/svc-context-switch
 make -C kernel/examples/irq-context-switch
-make -C user/lib
 make -C user/prog/minimum-user
 ```
 
 The user program links `user/lib/build/libminimum_user.a` and `libgcc`
-statically. New user programs should follow the same directory-local Makefile
-pattern under `user/prog/`.
+statically. Newlib and newlib-nano are not part of the platform.
+
+## Bootloader Maintenance
+
+Normal student work uses the checked-in `bootloader/bootloader.bin`; `make`
+automatically rebuilds and compares it as a consistency check. Students should
+not replace the canonical firmware. Manual firmware build, comparison, and
+update instructions are documented separately in the [bootloader maintainer
+guide](bootloader/README.md).
 
 ## Development Container
 
-Set the released development image before entering the toolchain environment:
-
-```sh
-export MINEMU_DEVELOPMENT_IMAGE=<published-docker-image>
-docker pull "$MINEMU_DEVELOPMENT_IMAGE"
-docker run --rm -it -v "$PWD:/workspace" -w /workspace "$MINEMU_DEVELOPMENT_IMAGE"
-```
+A released student development-container image is not yet available. The image
+name and supported launch workflow will be documented here when the release is
+published; there is currently no placeholder image to pull or run.

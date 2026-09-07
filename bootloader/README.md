@@ -1,5 +1,8 @@
 # minemu Bootloader
 
+This is a firmware-maintainer guide. Students using the supplied Boot ROM should
+follow the [template quickstart](../README.md) instead.
+
 This directory contains the fixed A32 firmware mapped into the platform's
 64 KiB Boot ROM. It is the first guest code executed after reset.
 
