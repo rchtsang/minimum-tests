@@ -1,26 +1,40 @@
 # minimum Tests
 
-This repository is the emulator conformance fork of `minimum-template`. It
-tracks the student platform layout while owning headless test programs,
-manifests, and assertions that do not belong in the student starter repository.
+This repository owns guest conformance programs and manifests for the `minemu`
+teaching platform. It is a fork of `minimum-template` so tests exercise the same
+Boot ROM, startup runtime, headers, linker layout, and build model used by the
+student starter without placing platform-conformance code in that repository.
 
-The baseline `image/minimum-test.toml` verifies reset firmware, segment copy,
-BSS clearing, boot information, and the higher-half handoff. Focused tests under
-`headless/` cover UART, timers and interrupts, block media, RNG and trace, MMU
-permissions and replacement bits, exception and CP15 behavior, and TTBR/TLBIALL
-switching.
+The canonical platform requirements live in the
+[minemu versioned specifications](https://github.com/rchtsang/minemu/blob/main/docs/platform/abi-v1.md).
+The parent
+[ABI conformance matrix](https://github.com/rchtsang/minemu/blob/main/docs/dev/abi-conformance.md)
+maps those requirements to Rust and guest evidence. The complete test-manifest
+schema is documented in the parent
+[headless-testing reference](https://github.com/rchtsang/minemu/blob/main/docs/dev/headless-testing.md).
+
+## Prerequisites
+
+- GNU Make and standard Unix build tools.
+- `just` for the inherited student public-test workflow.
+- GNU Arm Embedded tools including `arm-none-eabi-gcc`, `ar`, `objcopy`,
+  `readelf`, and `nm`.
+- A current `minemu` executable on `PATH`, or `MINEMU=/path/to/minemu` on Make
+  or Just commands.
 
 ## Repository Structure
 
-The five top-level source directories have distinct ownership:
+| Path | Ownership |
+|---|---|
+| `bootloader/` | Reset firmware and checked-in canonical 64-KiB Boot ROM |
+| `kernel/` | Shared conformance startup/runtime, headers, linker script, baseline kernel, and examples |
+| `user/` | User support library and baseline fixed-address module |
+| `image/` | Baseline multi-component image and boot-handoff test |
+| `headless/` | Focused single-purpose platform-conformance cases |
+| `tests/` | Student-facing public black-box manifests inherited from the template |
+| `docs/conformance-authoring.md` | Case layout, registration, oracles, timing, and fixtures |
 
-```text
-bootloader/  Reset firmware and the canonical 64 KiB Boot ROM binary
-kernel/      Kernel headers, linker script, startup, runtime, and examples
-user/        User libraries, common build support, and independent programs
-image/       Packed-image manifests, generated images, and boot tests
-headless/    Focused emulator conformance programs and test manifests
-```
+Generated files stay in component-local `build/` directories.
 
 - GNU Make and standard Unix build tools.
 - `just` for the parameterized public-test workflow.
@@ -63,77 +77,62 @@ to find component specifications and user guides.
 Build the bootloader, starter kernel, user program, and all kernel examples:
 
 ```sh
-make
+make test
 ```
 
-Packaging is a separate step. Build the system-ROM image after the source build:
+`make test` runs both conformance layers in order:
+
+1. `image/minimum-test.toml`, which checks the canonical Boot ROM, reset path,
+   initialized-data copy, BSS clearing, boot info, module metadata, and
+   higher-half handoff.
+2. Every focused case registered in `headless/Makefile`: `uart`, `interrupts`,
+   `block`, `rng-trace`, `mmu`, `exceptions`, and `ttbr-switch`.
+
+Override the emulator for the complete suite with:
 
 ```sh
-make image
+make test MINEMU=/path/to/minemu
 ```
 
-This creates `image/build/minimum.img`. If `minemu` is not on `PATH`, provide
-its executable explicitly:
+## Student Public Tests
 
-```sh
-make image MINEMU=/path/to/minemu
-```
-
-### Public Tests
-
-The HW1 public tests build the current image and exercise it as a black box:
+The template's parameterized Just workflow remains available for its inherited
+public manifests:
 
 ```sh
 just test-all hw1
+just test hw1 echo
 ```
 
-Use the same `MINEMU` override when the executable is not on `PATH`:
+These are student-homework checks, not platform-conformance checks, and are not
+part of root `make test`. The baseline kernel in this repository intentionally
+does not implement the HW1 shell, so its HW1 public tests are expected to fail.
 
-```sh
-MINEMU=/path/to/minemu just test-all hw1
-```
+## Build And Test Targets
 
-The untouched starter is expected to fail these tests because UART output,
-interrupt-driven input, and the shell are student work. See
-[`tests/README.md`](tests/README.md) for parameterized test commands and optional
-student tests.
-
-### Run
-
-Boot the packaged image with the supplied 64-KiB Boot ROM:
-
-```sh
-minemu run image/build/minimum.img \
-  --boot-rom bootloader/bootloader.bin
-```
-
-The TUI opens with emulation paused at the reset vector. These controls are
-enough for the initial workflow:
-
-| Input | Effect |
+| Command | Scope |
 |---|---|
-| `Space`, then `s` | Start or pause execution. |
-| `:start` | Start continuous execution. |
-| `:stop` | Pause execution. |
-| `i` | Enter console insert mode and send keys to the selected UART. |
-| `Esc` | Return to normal mode. |
-| `Space`, then `i` | Open inspect view and pause before taking snapshots. |
-| `Tab` | Cycle the focused inspect pane's subview. |
-| `?` | Open the complete in-application help table. |
-| `:q` | Shut down the emulator and quit. |
+| `make` | Check Boot ROM and build kernel, user code, and examples; no image packaging or tests |
+| `make image` | Package the baseline `image/build/minimum.img`; do not run it |
+| `make headless` | Build all registered focused images; do not run tests |
+| `make test` | Run the baseline followed by every registered focused case |
+| `make -C image test` | Run the baseline only, including Boot ROM consistency check |
+| `make -C headless test` | Run all focused cases, excluding the baseline |
+| `make -C headless test-uart` | Run one registered focused case |
+| `make -C headless image-uart` | Build one registered focused image only |
+| `make -C headless/uart test` | Run one case directly from its directory |
+| `just test HW NAME` | Run one inherited student public manifest |
+| `just test-all HW` | Run every inherited student public manifest for one homework |
 
-See the full [TUI guide](https://github.com/rchtsang/minemu/blob/main/docs/dev/tui.md)
-for navigation, memory inspection, searches, commands, and UART selection.
+Focused-only commands use the checked-in Boot ROM but do not rebuild or compare
+it. Run `make -C bootloader check` as well when validating a firmware-sensitive
+change outside the complete root suite.
 
-## Where To Work
+## Add Or Change A Case
 
-```text
-bootloader/  Supplied reset firmware and canonical 64-KiB Boot ROM
-kernel/      Starter kernel, platform headers, linker script, and examples
-user/        User support library, common build rules, and starter program
-image/       Image manifest and generated packaged image
-tests/       Public black-box manifests and optional student tests
-```
+Follow [Conformance authoring](docs/conformance-authoring.md). A focused case is
+not part of aggregate build, test, or clean targets until its directory name is
+added to `CASES` in `headless/Makefile`.
 
 - Start kernel work in `kernel/src/core/` and use interfaces from
   `kernel/include/minemu/`.
@@ -155,26 +154,20 @@ tests/       Public black-box manifests and optional student tests
 - Select the kernel and user modules included in the image by editing
   `image/minimum.toml`.
 
-Generated files remain in a `build/` directory beneath the component that owns
-them. The repository root does not contain build output.
+Use guest assertions for local diagnostics and an exact host manifest oracle
+for pass/fail. Successful guests emit their final success trace and enter the
+shared fail-stop loop; the host deadline ends execution deterministically.
 
-## Useful Targets
+## Cleaning
 
 ```sh
-make kernel
-make kernel-examples
-make user
-make image
-just test-all hw1 # hw tests
-make test # platform tests
-make headless
 make clean
 ```
 
-`make test` constructs `image/build/minimum.img`, starts execution at the
-platform reset vector, verifies the boot-info handoff after the kernel enables
-the MMU, and checks the expected trace assertion. Override the CLI with
-`MINEMU=/path/to/minemu` when needed.
+This removes generated build directories for the Boot ROM, kernel examples,
+user code, baseline image, and all registered focused cases, including the
+block case's disposable media. It preserves source manifests and the checked-in
+`bootloader/bootloader.bin`.
 
 Run the packed image directly with:
 
