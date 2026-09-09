@@ -16,7 +16,7 @@ Until the development container is released, install these tools locally:
 - The GNU Arm Embedded toolchain, including `arm-none-eabi-gcc`,
   `arm-none-eabi-ar`, `arm-none-eabi-objcopy`, `arm-none-eabi-readelf`, and
   `arm-none-eabi-nm`.
-- The `minemu` executable on `PATH`.
+- `minemu` version `0.1.0` on `PATH`. Verify it with `minemu --version`.
 
 The emulator and platform documentation are maintained in the
 [minemu repository](https://github.com/rchtsang/minemu). Start with the
@@ -158,6 +158,6 @@ guide](bootloader/README.md).
 
 ## Development Container
 
-A released student development-container image is not yet available. The image
-name and supported launch workflow will be documented here when the release is
-published; there is currently no placeholder image to pull or run.
+The student image is planned as `rtsang1/cs492-stevens.edu:0.1.0`, but it has
+not yet been published. Continue using the local prerequisites above until a
+tested digest and pull instructions are announced.
