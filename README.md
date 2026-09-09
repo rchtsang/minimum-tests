@@ -45,6 +45,26 @@ its executable explicitly:
 make image MINEMU=/path/to/minemu
 ```
 
+### Public Tests
+
+The Assignment 1 public tests build the current image and exercise it as a
+black box:
+
+```sh
+make test
+```
+
+Use the same `MINEMU` override when the executable is not on `PATH`:
+
+```sh
+make test MINEMU=/path/to/minemu
+```
+
+The untouched starter is expected to fail these tests because UART output,
+interrupt-driven input, and the shell are student work. See
+[`tests/README.md`](tests/README.md) for individual targets and optional student
+tests.
+
 ### Run
 
 Boot the packaged image with the supplied 64-KiB Boot ROM:
@@ -79,10 +99,20 @@ bootloader/  Supplied reset firmware and canonical 64-KiB Boot ROM
 kernel/      Starter kernel, platform headers, linker script, and examples
 user/        User support library, common build rules, and starter program
 image/       Image manifest and generated packaged image
+tests/       Public black-box manifests and optional student tests
 ```
 
 - Start kernel work in `kernel/src/core/` and use interfaces from
   `kernel/include/minemu/`.
+- Preserve the supplied vector table and exception-mode stack initialization.
+  Assignment 1 replaces the weak IRQ hooks by adapting the supplied
+  `irq-context-switch` example.
+- The released `minemu/platform.h`, `minemu/trap.h`, `minemu/irq.h`, and
+  `minemu_irq_dispatch` boundary are fixed for Assignment 1. Console, buffer,
+  line-reader, and shell interfaces remain student-defined.
+- Add new C or assembly sources under `kernel/src/` and list their objects in
+  `kernel/Makefile`; the starter intentionally does not prescribe a subsystem
+  layout.
 - Add kernel examples under `kernel/examples/`.
 - Add independently linked user programs under `user/prog/` using the existing
   directory-local Makefile pattern.
@@ -99,6 +129,7 @@ make kernel
 make kernel-examples
 make user
 make image
+make test
 make clean
 ```
 
@@ -113,6 +144,9 @@ make -C user/prog/minimum-user
 
 The user program links `user/lib/build/libminimum_user.a` and `libgcc`
 statically. Newlib and newlib-nano are not part of the platform.
+
+The user-mode program and SVC example are supplied for later assignments. They
+are not Assignment 1 implementation work.
 
 ## Bootloader Maintenance
 

@@ -1,0 +1,8 @@
+image = "../../image/build/minimum.img"
+boot_rom = "../../bootloader/bootloader.bin"
+max_ticks = 500000
+
+[assert]
+uart0_contains = "hello world"
+execution_lifecycle = "paused"
+shutdown_lifecycle = "stopped"
