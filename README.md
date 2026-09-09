@@ -12,6 +12,7 @@ system image for `minemu`.
 Until the development container is released, install these tools locally:
 
 - GNU Make and standard Unix build tools.
+- `just` for the parameterized public-test workflow.
 - The GNU Arm Embedded toolchain, including `arm-none-eabi-gcc`,
   `arm-none-eabi-ar`, `arm-none-eabi-objcopy`, `arm-none-eabi-readelf`, and
   `arm-none-eabi-nm`.
@@ -47,23 +48,22 @@ make image MINEMU=/path/to/minemu
 
 ### Public Tests
 
-The Assignment 1 public tests build the current image and exercise it as a
-black box:
+The HW1 public tests build the current image and exercise it as a black box:
 
 ```sh
-make test
+just test-all hw1
 ```
 
 Use the same `MINEMU` override when the executable is not on `PATH`:
 
 ```sh
-make test MINEMU=/path/to/minemu
+MINEMU=/path/to/minemu just test-all hw1
 ```
 
 The untouched starter is expected to fail these tests because UART output,
 interrupt-driven input, and the shell are student work. See
-[`tests/README.md`](tests/README.md) for individual targets and optional student
-tests.
+[`tests/README.md`](tests/README.md) for parameterized test commands and optional
+student tests.
 
 ### Run
 
@@ -129,7 +129,7 @@ make kernel
 make kernel-examples
 make user
 make image
-make test
+just test-all hw1
 make clean
 ```
 

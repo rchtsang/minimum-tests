@@ -1,18 +1,19 @@
 # Student Tests
 
-`assignment1/` contains the initial public black-box tests. They run the packaged
-student image and do not link against internal kernel functions.
+`hw1/` contains the initial public black-box tests. They run the packaged student
+image and do not link against internal kernel functions. Later homework tests
+use sibling directories such as `hw2/` without adding new Just recipes.
 
 Run all released tests from the repository root:
 
 ```sh
-make test
+just test-all hw1
 ```
 
-Run one public test with its named root target, for example:
+Run one public test by homework and manifest name, for example:
 
 ```sh
-make test-a1-echo
+just test hw1 echo
 ```
 
 Students may add manifests or other tests under `tests/` using any reasonable
