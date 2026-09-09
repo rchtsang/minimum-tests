@@ -17,10 +17,11 @@ schema is documented in the parent
 
 - GNU Make and standard Unix build tools.
 - `just` for the inherited student public-test workflow.
-- GNU Arm Embedded tools including `arm-none-eabi-gcc`, `ar`, `objcopy`,
-  `readelf`, and `nm`.
-- A current `minemu` executable on `PATH`, or `MINEMU=/path/to/minemu` on Make
-  or Just commands.
+- GNU Arm Embedded tools including `arm-none-eabi-gcc`, `arm-none-eabi-ar`,
+  `arm-none-eabi-objcopy`, `arm-none-eabi-readelf`, and `arm-none-eabi-nm`.
+- The workspace-matching `minemu` executable, currently version `0.1.0`, on
+  `PATH`, or `MINEMU=/path/to/minemu` on Make or Just commands. Verify it with
+  `minemu --version`.
 
 ## Repository Structure
 
