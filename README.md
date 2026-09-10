@@ -9,7 +9,8 @@ system image for `minemu`.
 
 ### Prerequisites
 
-Until the development container is released, install these tools locally:
+To work without the published development container, install these tools
+locally:
 
 - GNU Make and standard Unix build tools.
 - `just` for the parameterized public-test workflow.
@@ -158,6 +159,11 @@ guide](bootloader/README.md).
 
 ## Development Container
 
-The student image is planned as `rtsang1/cs492-stevens.edu:0.1.0`, but it has
-not yet been published. Continue using the local prerequisites above until a
-tested digest and pull instructions are announced.
+The supported Assignment 1 environment is published for `linux/amd64` and
+`linux/arm64` as:
+
+```text
+rtsang1/cs492-stevens@sha256:9b9c8be5ccdadc046ad4577107e087aee2dad21b8fb6e081238833a70a2ef7a7
+```
+
+The corresponding readable version tag is `rtsang1/cs492-stevens:0.1.0`.
