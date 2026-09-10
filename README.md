@@ -6,7 +6,7 @@ Boot ROM, startup runtime, headers, linker layout, and build model used by the
 student starter without placing platform-conformance code in that repository.
 
 The canonical platform requirements live in the
-[minemu versioned specifications](https://github.com/rchtsang/minemu/blob/main/docs/platform/abi-v1.md).
+[minemu versioned specifications](https://github.com/rchtsang/minemu/blob/main/docs/platform/abi-v2.md).
 The parent
 [ABI conformance matrix](https://github.com/rchtsang/minemu/blob/main/docs/dev/abi-conformance.md)
 maps those requirements to Rust and guest evidence. The complete test-manifest
@@ -37,6 +37,7 @@ schema is documented in the parent
 
 Generated files stay in component-local `build/` directories.
 
+<<<<<<< Updated upstream
 - GNU Make and standard Unix build tools.
 - `just` for the parameterized public-test workflow.
 - The GNU Arm Embedded toolchain, including `arm-none-eabi-gcc`,
@@ -51,6 +52,9 @@ or use the [documentation index](https://github.com/rchtsang/minemu/blob/main/do
 to find component specifications and user guides.
 
 ### Build And Package
+=======
+## Components
+>>>>>>> Stashed changes
 
 ### Kernel
 
@@ -75,7 +79,7 @@ to find component specifications and user guides.
 
 ## Building
 
-Build the bootloader, starter kernel, user program, and all kernel examples:
+Build and run the baseline plus every focused conformance case:
 
 ```sh
 make test
@@ -126,9 +130,10 @@ does not implement the HW1 shell, so its HW1 public tests are expected to fail.
 | `just test HW NAME` | Run one inherited student public manifest |
 | `just test-all HW` | Run every inherited student public manifest for one homework |
 
-Focused-only commands use the checked-in Boot ROM but do not rebuild or compare
-it. Run `make -C bootloader check` as well when validating a firmware-sensitive
-change outside the complete root suite.
+Focused test commands use the checked-in Boot ROM but do not rebuild or compare
+it; focused image-only commands do not use it. Run `make -C bootloader check` as
+well when validating a firmware-sensitive change outside the complete root
+suite.
 
 ## Add Or Change A Case
 
@@ -136,6 +141,7 @@ Follow [Conformance authoring](docs/conformance-authoring.md). A focused case is
 not part of aggregate build, test, or clean targets until its directory name is
 added to `CASES` in `headless/Makefile`.
 
+<<<<<<< Updated upstream
 - Start kernel work in `kernel/src/core/` and use interfaces from
   `kernel/include/minemu/`.
 - Preserve the supplied vector table and exception-mode stack initialization.
@@ -157,6 +163,8 @@ added to `CASES` in `headless/Makefile`.
 - Select the kernel and user modules included in the image by editing
   `image/minimum.toml`.
 
+=======
+>>>>>>> Stashed changes
 Use guest assertions for local diagnostics and an exact host manifest oracle
 for pass/fail. Successful guests emit their final success trace and enter the
 shared fail-stop loop; the host deadline ends execution deterministically.
@@ -171,6 +179,8 @@ This removes generated build directories for the Boot ROM, kernel examples,
 user code, baseline image, and all registered focused cases, including the
 block cases' disposable media. It preserves source manifests and the checked-in
 `bootloader/bootloader.bin`.
+
+## Run The Baseline
 
 Run the packed image directly with:
 

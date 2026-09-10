@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include "minemu/block.h"
 #include "minemu/conformance.h"
 #include "minemu/platform.h"
 
@@ -119,6 +120,28 @@ void minemu_kernel_main(const void *boot_info) {
         MINEMU_REQUIRE((MINEMU_INTERRUPT->pending & (UINT32_C(1) << MINEMU_IRQ_BLOCK)) == 0U,
                        32 + unit * 3U);
     }
+
+    for (size_t i = 0; i < sizeof(dma); ++i) {
+        dma[i] = UINT8_C(0x3c);
+    }
+    MINEMU_REQUIRE(minemu_block_write(MINEMU_BLOCK_UNIT_SWAP, 0, 1, dma_paddr) ==
+                       MINEMU_BLOCK_ERROR_NONE,
+                   40);
+    for (size_t i = 0; i < sizeof(dma); ++i) {
+        dma[i] = 0;
+    }
+    MINEMU_REQUIRE(minemu_block_read(MINEMU_BLOCK_UNIT_SWAP, 0, 1, dma_paddr) ==
+                       MINEMU_BLOCK_ERROR_NONE,
+                   41);
+    for (size_t i = 0; i < sizeof(dma); ++i) {
+        MINEMU_REQUIRE(dma[i] == UINT8_C(0x3c), 42);
+    }
+    MINEMU_REQUIRE(minemu_block_read(UINT32_C(2), 0, 1, dma_paddr) ==
+                       MINEMU_BLOCK_ERROR_INVALID_UNIT,
+                   43);
+    MINEMU_REQUIRE((MINEMU_BLOCK->status &
+                    (MINEMU_BLOCK_STATUS_COMPLETE | MINEMU_BLOCK_STATUS_ERROR)) == 0U,
+                   44);
 
     minemu_trace_event(UINT32_C(0x20030001));
     minemu_fail_stop();

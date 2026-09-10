@@ -2,7 +2,7 @@
 
 This guide explains how to add focused guest evidence to `minimum-tests`. The
 canonical
-[platform specifications](https://github.com/rchtsang/minemu/blob/main/docs/platform/abi-v1.md)
+[platform specifications](https://github.com/rchtsang/minemu/blob/main/docs/platform/abi-v2.md)
 define requirements, and the parent
 [headless-testing reference](https://github.com/rchtsang/minemu/blob/main/docs/dev/headless-testing.md)
 defines every manifest field and comparison rule.
@@ -184,6 +184,12 @@ The manifest attaches the resulting two-sector images with `block0_media` and
 host-file offset 512 after shutdown. The legacy `block_media` field remains a
 unit-0 alias. `make image` alone does not prepare media; `make test` does. Place
 every disposable fixture under `build/` so aggregate clean removes it.
+
+The `block-unattached` case prepares and attaches only
+`build/filesystem.img` as unit 0. It deliberately omits `block1_media`, leaving
+unit 1 unattached so the guest can verify scheduled No Media completion. Its
+registration in `headless/Makefile` includes it in aggregate test and clean
+targets.
 
 ## Run And Diagnose
 
