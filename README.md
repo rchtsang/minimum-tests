@@ -17,7 +17,7 @@ locally:
 - The GNU Arm Embedded toolchain, including `arm-none-eabi-gcc`,
   `arm-none-eabi-ar`, `arm-none-eabi-objcopy`, `arm-none-eabi-readelf`, and
   `arm-none-eabi-nm`.
-- `minemu` version `0.1.0` on `PATH`. Verify it with `minemu --version`.
+- `minemu` version `0.2.0` on `PATH`. Verify it with `minemu --version`.
 
 The emulator and platform documentation are maintained in the
 [minemu repository](https://github.com/rchtsang/minemu). Start with the
@@ -111,6 +111,9 @@ tests/       Public black-box manifests and optional student tests
 - The released `minemu/platform.h`, `minemu/trap.h`, `minemu/irq.h`, and
   `minemu_irq_dispatch` boundary are fixed for Assignment 1. Console, buffer,
   line-reader, and shell interfaces remain student-defined.
+- `minemu/block.h` provides the supplied serialized synchronous block interface;
+  unit 0 is reserved for filesystem/general media and unit 1 for swap in the
+  course environment.
 - Add new C or assembly sources under `kernel/src/` and list their objects in
   `kernel/Makefile`; the starter intentionally does not prescribe a subsystem
   layout.

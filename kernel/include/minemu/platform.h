@@ -51,6 +51,9 @@
 #define MINEMU_BLOCK_ERROR_INVALID_DMA UINT32_C(4)
 #define MINEMU_BLOCK_ERROR_INVALID_LBA UINT32_C(5)
 #define MINEMU_BLOCK_ERROR_DEFERRED_PERSISTENCE UINT32_C(6)
+#define MINEMU_BLOCK_ERROR_INVALID_UNIT UINT32_C(7)
+#define MINEMU_BLOCK_UNIT_FILESYSTEM UINT32_C(0)
+#define MINEMU_BLOCK_UNIT_SWAP UINT32_C(1)
 
 #define MINEMU_IRQ_SYSTICK UINT32_C(0)
 #define MINEMU_IRQ_UART0 UINT32_C(1)
@@ -96,6 +99,7 @@ struct __attribute__((packed, aligned(4))) minemu_block_regs {
     uint32_t error;
     uint32_t ack;
     uint32_t control;
+    uint32_t unit;
 };
 
 struct __attribute__((packed, aligned(4))) minemu_rng_regs {
@@ -122,9 +126,10 @@ _Static_assert(offsetof(struct minemu_interrupt_regs, eoi) == 12, "interrupt EOI
 _Static_assert(sizeof(struct minemu_systick_regs) == 16, "systick register size");
 _Static_assert(_Alignof(struct minemu_systick_regs) == 4, "systick register alignment");
 _Static_assert(offsetof(struct minemu_systick_regs, ack) == 12, "systick ACK offset");
-_Static_assert(sizeof(struct minemu_block_regs) == 32, "block register size");
+_Static_assert(sizeof(struct minemu_block_regs) == 36, "block register size");
 _Static_assert(_Alignof(struct minemu_block_regs) == 4, "block register alignment");
 _Static_assert(offsetof(struct minemu_block_regs, control) == 28, "block CONTROL offset");
+_Static_assert(offsetof(struct minemu_block_regs, unit) == 32, "block UNIT offset");
 _Static_assert(sizeof(struct minemu_rng_regs) == 12, "rng register size");
 _Static_assert(_Alignof(struct minemu_rng_regs) == 4, "rng register alignment");
 _Static_assert(sizeof(struct minemu_uart_regs) == 16, "uart register size");
