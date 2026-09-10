@@ -14,7 +14,10 @@ static uint32_t minemu_block_transfer(uint32_t command, uint32_t unit, uint32_t 
     while ((MINEMU_BLOCK->status & MINEMU_BLOCK_STATUS_COMPLETE) == 0U) {
     }
 
-    uint32_t error = MINEMU_BLOCK->error;
+    uint32_t status = MINEMU_BLOCK->status;
+    uint32_t error = (status & MINEMU_BLOCK_STATUS_ERROR) != 0U
+                         ? MINEMU_BLOCK->error
+                         : MINEMU_BLOCK_ERROR_NONE;
     MINEMU_BLOCK->ack = MINEMU_BLOCK_ACK;
     if ((cpsr & UINT32_C(0x80)) == 0U) {
         __asm__ volatile("cpsie i" : : : "memory");
