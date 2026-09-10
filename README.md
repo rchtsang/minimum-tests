@@ -19,7 +19,7 @@ schema is documented in the parent
 - `just` for the inherited student public-test workflow.
 - GNU Arm Embedded tools including `arm-none-eabi-gcc`, `arm-none-eabi-ar`,
   `arm-none-eabi-objcopy`, `arm-none-eabi-readelf`, and `arm-none-eabi-nm`.
-- The workspace-matching `minemu` executable, currently version `0.1.0`, on
+- The workspace-matching `minemu` executable, currently version `0.2.0`, on
   `PATH`, or `MINEMU=/path/to/minemu` on Make or Just commands. Verify it with
   `minemu --version`.
 
@@ -87,7 +87,8 @@ make test
    initialized-data copy, BSS clearing, boot info, module metadata, and
    higher-half handoff.
 2. Every focused case registered in `headless/Makefile`: `uart`, `interrupts`,
-   `block`, `rng-trace`, `mmu`, `exceptions`, and `ttbr-switch`.
+   `block`, `block-unattached`, `rng-trace`, `mmu`, `exceptions`, and
+   `ttbr-switch`.
 
 Override the emulator for the complete suite with:
 
@@ -167,7 +168,7 @@ make clean
 
 This removes generated build directories for the Boot ROM, kernel examples,
 user code, baseline image, and all registered focused cases, including the
-block case's disposable media. It preserves source manifests and the checked-in
+block cases' disposable media. It preserves source manifests and the checked-in
 `bootloader/bootloader.bin`.
 
 Run the packed image directly with:

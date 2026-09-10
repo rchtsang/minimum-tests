@@ -20,7 +20,8 @@ Focused cases under `headless/` isolate one contract area:
 |---|---|
 | `uart` | Polling, RX queues, TX output, and both ports |
 | `interrupts` | Timer deadlines, source levels, priority, claim/EOI, and IRQ entry |
-| `block` | DMA, deadline, guest errors, write-back media, and persistence |
+| `block` | Two-unit DMA, snapshotting, shared IRQ/Busy state, write-back media, and persistence |
+| `block-unattached` | Scheduled No Media completion for a supported unattached unit |
 | `rng-trace` | Deterministic RNG sequence and ordered trace events |
 | `mmu` | PTE permissions, Accessed/Dirty bits, and translation faults |
 | `exceptions` | SVC, undefined, aborts, IRQ state, CP15, and user/device protection |
@@ -172,15 +173,17 @@ empty `prepare` target:
 .PHONY: prepare
 prepare:
 	mkdir -p build
-	rm -f build/disk.img
-	truncate -s 1024 build/disk.img
+	rm -f build/filesystem.img build/swap.img
+	truncate -s 1024 build/filesystem.img
+	truncate -s 1024 build/swap.img
 ```
 
 `case.mk` makes `prepare` and the packaged image prerequisites of test execution.
-The manifest attaches the resulting two-sector image and checks persisted bytes
-at host-file offset 512 after shutdown. `make image` alone does not prepare
-media; `make test` does. Place every disposable fixture under `build/` so
-aggregate clean removes it.
+The manifest attaches the resulting two-sector images with `block0_media` and
+`block1_media`, then selects each assertion's unit and checks persisted bytes at
+host-file offset 512 after shutdown. The legacy `block_media` field remains a
+unit-0 alias. `make image` alone does not prepare media; `make test` does. Place
+every disposable fixture under `build/` so aggregate clean removes it.
 
 ## Run And Diagnose
 

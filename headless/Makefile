@@ -1,6 +1,6 @@
 MINEMU ?= minemu
 
-CASES := uart interrupts block rng-trace mmu exceptions ttbr-switch
+CASES := uart interrupts block block-unattached rng-trace mmu exceptions ttbr-switch
 IMAGE_TARGETS := $(addprefix image-,$(CASES))
 TEST_TARGETS := $(addprefix test-,$(CASES))
 

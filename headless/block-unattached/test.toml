@@ -1,0 +1,11 @@
+image = "build/block-unattached.img"
+boot_rom = "../../bootloader/bootloader.bin"
+block0_media = "build/filesystem.img"
+instruction_batch = 1
+max_ticks = 500000
+
+[assert]
+execution_lifecycle = "paused"
+shutdown_lifecycle = "stopped"
+mmu_enabled = true
+trace_values = [0x20030002]
