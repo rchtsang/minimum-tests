@@ -46,7 +46,7 @@ Generated files stay in component-local `build/` directories.
 
 The emulator and platform documentation are maintained in the
 [minemu repository](https://github.com/rchtsang/minemu). Start with the
-[normative platform ABI v1](https://github.com/rchtsang/minemu/blob/main/docs/platform/abi-v1.md)
+[normative platform ABI v2](https://github.com/rchtsang/minemu/blob/main/docs/platform/abi-v2.md)
 or use the [documentation index](https://github.com/rchtsang/minemu/blob/main/docs/README.md)
 to find component specifications and user guides.
 
@@ -141,12 +141,13 @@ added to `CASES` in `headless/Makefile`.
 - Preserve the supplied vector table and exception-mode stack initialization.
   Assignment 1 replaces the weak IRQ hooks by adapting the supplied
   `irq-context-switch` example.
-- The released `minemu/platform.h`, `minemu/trap.h`, `minemu/irq.h`, and
+- The Assignment 1 versions of `minemu/platform.h`, `minemu/trap.h`,
+  `minemu/irq.h`, and the
   `minemu_irq_dispatch` boundary are fixed for Assignment 1. Console, buffer,
   line-reader, and shell interfaces remain student-defined.
 - `minemu/block.h` provides the supplied serialized synchronous block interface;
-  unit 0 is reserved for filesystem/general media and unit 1 for swap in the
-  course environment.
+  by course convention, unit 0 is filesystem/general media and unit 1 is swap.
+  The hardware treats both as identical raw-sector units.
 - Add new C or assembly sources under `kernel/src/` and list their objects in
   `kernel/Makefile`; the starter intentionally does not prescribe a subsystem
   layout.
@@ -204,13 +205,3 @@ not replace the canonical firmware. Manual firmware build, comparison, and
 update instructions are documented separately in the [bootloader maintainer
 guide](bootloader/README.md).
 
-## Development Container
-
-The supported Assignment 1 environment is published for `linux/amd64` and
-`linux/arm64` as:
-
-```text
-rtsang1/cs492-stevens@sha256:9b9c8be5ccdadc046ad4577107e087aee2dad21b8fb6e081238833a70a2ef7a7
-```
-
-The corresponding readable version tag is `rtsang1/cs492-stevens:0.1.0`.
