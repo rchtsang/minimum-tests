@@ -34,3 +34,11 @@ test-all hw: image
 # Remove generated guest build output.
 clean:
     make -C "{{ root }}" clean
+
+# start the docker container
+docker:
+    docker run --rm -it \
+        --add-host host.docker.internal:host-gateway \
+        -v "$PWD:/workspace" \
+        -w /workspace \
+        rtsang1/cs492-stevens:latest
