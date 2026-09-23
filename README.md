@@ -154,6 +154,18 @@ added to `CASES` in `headless/Makefile`.
 - `minemu/block.h` provides the supplied serialized synchronous block interface;
   by course convention, unit 0 is filesystem/general media and unit 1 is swap.
   The hardware treats both as identical raw-sector units.
+- `minemu/debug.h` provides `breakpoint(TAG)` for programmer-inserted debugging
+  pauses. `TAG` must be a compile-time constant from `0` through `65535`:
+
+  ```c
+  #include "minemu/debug.h"
+
+  breakpoint(0x1234);
+  ```
+
+  The emulator pauses with PC on the `bkpt` instruction so you can inspect the
+  machine. Manually resuming execution advances past that breakpoint once and
+  continues at the following instruction.
 - Add new C or assembly sources under `kernel/src/` and list their objects in
   `kernel/Makefile`; the starter intentionally does not prescribe a subsystem
   layout.
@@ -214,4 +226,3 @@ automatically rebuilds and compares it as a consistency check. Students should
 not replace the canonical firmware. Manual firmware build, comparison, and
 update instructions are documented separately in the [bootloader maintainer
 guide](bootloader/README.md).
-
