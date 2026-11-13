@@ -39,7 +39,7 @@ Each `headless/NAME/` directory contains:
 | `image.toml` | Packages `build/NAME.elf` as the case kernel |
 | `test.toml` | Sets the deadline/setup and exact host assertions |
 
-`kernel/common.mk` discovers every directory-local `.c` and `.S` file, links it
+`examples/kernel.mk` discovers every directory-local `.c` and `.S` file, links it
 with the shared kernel runtime and linker script, and writes all generated files
 under the case's `build/` directory. Shared startup establishes banked stacks,
 bootstrap page tables, TTBR0, the MMU, VBAR, and the high-half transition before

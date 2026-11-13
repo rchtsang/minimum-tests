@@ -1,6 +1,6 @@
 MINEMU ?= minemu
 
-include ../../kernel/common.mk
+include ../../examples/kernel.mk
 
 IMAGE := build/$(PROGRAM).img
 
