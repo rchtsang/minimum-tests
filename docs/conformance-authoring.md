@@ -130,10 +130,10 @@ Most current focused cases use 500,000 ticks. `exceptions` uses 600,000 and
 `interrupts` uses 900,000. The baseline uses 500,000. Keep a larger budget only
 when the guest behavior requires more virtual progress.
 
-Set `instruction_batch = 1` only when the case intentionally probes exact
-instruction/device boundaries or benefits from maximal boundary visibility.
-The block and interrupt deadline cases use it with explicit assembly sequences.
-Batch size does not weaken exact scheduled-input or `max_ticks` enforcement.
+Leave `instruction_batch` at its default. Since `minemu` 0.2.4, device
+deadlines, trace stamps, IRQ delivery, scheduled input, and `max_ticks` are
+exact at every instruction boundary regardless of batch size, so the setting
+only affects throughput.
 
 Focused manifests normally assert:
 

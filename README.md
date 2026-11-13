@@ -19,7 +19,7 @@ schema is documented in the parent
 - `just` for the inherited student public-test workflow.
 - GNU Arm Embedded tools including `arm-none-eabi-gcc`, `arm-none-eabi-ar`,
   `arm-none-eabi-objcopy`, `arm-none-eabi-readelf`, and `arm-none-eabi-nm`.
-- The workspace-matching `minemu` executable, currently version `0.2.0`, on
+- The workspace-matching `minemu` executable, currently version `0.2.4`, on
   `PATH`, or `MINEMU=/path/to/minemu` on Make or Just commands. Verify it with
   `minemu --version`.
 
@@ -42,7 +42,7 @@ Generated files stay in component-local `build/` directories.
 - The GNU Arm Embedded toolchain, including `arm-none-eabi-gcc`,
   `arm-none-eabi-ar`, `arm-none-eabi-objcopy`, `arm-none-eabi-readelf`, and
   `arm-none-eabi-nm`.
-- `minemu` version `0.2.3` on `PATH`. Verify it with `minemu --version`.
+- `minemu` version `0.2.4` on `PATH`. Verify it with `minemu --version`.
 
 The emulator and platform documentation are maintained in the
 [minemu repository](https://github.com/rchtsang/minemu). Start with the
